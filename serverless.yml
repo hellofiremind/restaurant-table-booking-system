@@ -1,0 +1,98 @@
+service: restaurant-table-booking-system
+
+provider:
+  name: aws
+  profile: default
+  runtime: nodejs6.10
+  stage: ${opt:stage, 'staging'}
+  region: eu-west-2
+  memorySize: 128
+  timeout: 300
+  environment:
+    STAGE: ${self:provider.stage}
+    SERVICE: ${self:service}
+
+functions:
+  getAllTables:
+    handler: src/getAllTables.handler
+    events:
+      - http: GET getAllTables
+  createCustomer:
+    handler: src/createCustomer.handler
+    events:
+      - http: GET createCustomer
+  createBooking:
+    handler: src/checkBooking.handler
+    events:
+      - http: GET checkBooking
+
+resources:
+  Resources:
+    bookings:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}_bookings
+        AttributeDefinitions:
+          - AttributeName: start_time
+            AttributeType: S
+        KeySchema:
+          - AttributeName: start_time
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    tables:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}_tables
+        AttributeDefinitions:
+          - AttributeName: occupancy
+            AttributeType: N
+        KeySchema:
+          - AttributeName: occupancy
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    customers:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}_customers
+        AttributeDefinitions:
+          - AttributeName: customer_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: customer_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+
+package:
+  individually: true
+
+custom:
+  dynamodb:
+    start:
+      port: 18764
+      inMemory: true
+      migrate: true
+      seed: true
+
+    seed:
+      domain:
+        sources:
+          - table: ${self:provider.stage}_customers
+            sources: [./seed/staging/db/customers.json]
+          - table: ${self:provider.stage}_bookings
+            sources: [./seed/staging/db/bookings.json]
+          - table: ${self:provider.stage}_tables
+            sources: [./seed/staging/db/tables.json]
+
+  webpackIncludeModules: true

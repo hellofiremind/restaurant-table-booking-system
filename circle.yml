@@ -1,0 +1,25 @@
+machine:
+  node:
+    version: 6.10.3
+
+dependencies:
+  override:
+    - npm install -g yarn
+    - yarn install
+
+test:
+  override:
+    - npm run build
+    - npm run test
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - npm run deploy:production
+
+  staging:
+    branch: development
+    commands:
+      - npm run deploy
+      - npm run db:migrate

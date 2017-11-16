@@ -1,0 +1,32 @@
+[
+  {
+    "occupancy": 2,
+    "quantity": 5,
+    "table_numbers": [1, 2, 3, 4, 5],
+    "requires": {
+      "other_tables": false
+    }
+  }, {
+    "occupancy": 4,
+    "quantity": 4,
+    "table_numbers": [6, 7, 8, 9],
+    "requires": {
+      "other_tables": false
+    }
+  }, {
+    "occupancy": 6,
+    "quantity": 4,
+    "table_numbers": [10, 11, 12, 13],
+    "requires": {
+      "other_tables": false
+    }
+  }, {
+    "occupancy": 12,
+    "quantity": 1,
+    "table_numbers": [14],
+    "requires": {
+      "other_tables": true,
+      "combos": [[6, 6], [4, 4, 4, 4]]
+    }
+  }
+]

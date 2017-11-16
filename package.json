@@ -1,0 +1,90 @@
+{
+  "name": "restaurant-table-booking-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "concurrently \"npm test\" \"npm run webpack\"",
+    "deploy": "npm run serverless:deploy",
+    "deploy:production": "npm run serverless:deploy -- --stage production",
+    "db:install": "serverless dynamodb install --stage staging",
+    "db:migrate": "STAGE=staging OVERWRITE=1 AWS_SDK_LOAD_CONFIG=1 AWS_SHARED_CREDENTIALS_FILE=./.aws-credentials node tool/dynamo-import.js",
+    "db:migrate:production": "STAGE=production OVERWRITE=1 AWS_SDK_LOAD_CONFIG=1 AWS_SHARED_CREDENTIALS_FILE=./.aws-credentials node tool/dynamo-import.js",
+    "invoke": "serverless invoke local",
+    "local": "serverless offline start --stage staging --location build/service --seed=domain",
+    "serverless": "serverless",
+    "serverless:deploy": "AWS_SHARED_CREDENTIALS_FILE=./.aws-credentials NODE_ENV=production serverless deploy --verbose",
+    "start": "concurrently \"npm test\" \"npm run db:install\" \"npm run webpack\" && concurrently \"npm run local\" \"npm run watch\"",
+    "test": "standard --verbose | snazzy",
+    "watch": "concurrently \"npm run watch:test\"",
+    "watch:test": "onchange \"src/**/*\" \"*.js\" -- npm test",
+    "watch:webpack": "onchange \"src/**/*\" \"*.js\" -- npm run webpack",
+    "webpack": "serverless webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firestartermedia/restaurant-table-booking-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/firestartermedia/restaurant-table-booking-system/issues"
+  },
+  "homepage": "https://github.com/firestartermedia/restaurant-table-booking-system#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.32",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.32",
+    "@babel/plugin-transform-async-to-generator": "^7.0.0-beta.32",
+    "@babel/plugin-transform-spread": "^7.0.0-beta.32",
+    "@babel/preset-env": "^7.0.0-beta.32",
+    "babel-loader": "8.0.0-beta.0",
+    "babel-plugin-lodash": "^3.3.2",
+    "concurrently": "^3.5.0",
+    "json-loader": "^0.5.7",
+    "onchange": "^3.2.1",
+    "serverless": "^1.24.1",
+    "serverless-dynamodb-local": "^0.2.26",
+    "serverless-offline": "^3.16.0",
+    "serverless-webpack": "^4.0.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "webpack": "^3.8.1",
+    "webpack-node-externals": "^1.6.0",
+    "yaml-loader": "^0.5.0"
+  },
+  "dependencies": {
+    "async": "^2.6.0",
+    "aws-sdk": "^2.149.0",
+    "dynamodb-data-types": "^3.0.0",
+    "glob": "^7.1.2",
+    "lodash": "^4.17.4",
+    "node-yaml": "^3.1.1",
+    "query-string": "^5.0.1",
+    "request": "^2.83.0",
+    "uuid": "^3.1.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "node": "6.10"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "lodash",
+      "@babel/plugin-transform-async-to-generator",
+      "@babel/plugin-transform-spread",
+      "@babel/proposal-object-rest-spread"
+    ]
+  },
+  "standard": {
+    "ignore": [
+      "build"
+    ]
+  }
+}
