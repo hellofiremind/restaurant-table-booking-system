@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "async": "^2.6.0",
-    "aws-sdk": "^2.149.0",
+    "aws-sdk": "^2.814.0",
     "dynamodb-data-types": "^3.0.0",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
