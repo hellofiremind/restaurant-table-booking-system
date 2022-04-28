@@ -54,7 +54,7 @@
     "yaml-loader": "^0.5.0"
   },
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^2.6.4",
     "aws-sdk": "^2.149.0",
     "dynamodb-data-types": "^3.0.0",
     "glob": "^7.1.2",
